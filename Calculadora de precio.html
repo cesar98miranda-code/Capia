@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcula tu Libro | Encuadernación Artesanal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Fraunces"', 'serif'],
+                    },
+                    colors: {
+                        paper: {
+                            50: '#FDFBF7',
+                            100: '#F7F3EB',
+                            200: '#EFE8D8',
+                            300: '#E2D6BE',
+                            800: '#4A4238',
+                            900: '#2C2620',
+                        },
+                        terracotta: {
+                            500: '#C85A32',
+                            600: '#B04A25',
+                            700: '#923B1C',
+                        },
+                        forest: {
+                            600: '#2E5A44',
+                            700: '#234735',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 8px;
+            border-radius: 999px;
+            background: #E2D6BE;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            margin-top: -6px;
+            background-color: #C85A32;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            border: 3px solid #FDFBF7;
+            box-shadow: 0 2px 5px rgba(44, 38, 32, 0.25);
+            transition: transform 0.15s ease, background-color 0.15s ease;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.12);
+            background-color: #B04A25;
+        }
+    </style>
+</head>
+<body class="bg-paper-100 text-paper-900 min-h-screen antialiased selection:bg-terracotta-500 selection:text-white flex items-center justify-center p-4 sm:p-6">
+
+    <!-- Notificación Toast para copiado -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-forest-700 text-white px-5 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 border border-forest-600">
+            <svg class="w-5 h-5 text-emerald-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span class="text-sm font-medium">¡Mensaje copiado! Pegalo en WhatsApp para enviarnos tu pedido.</span>
+        </div>
+    </div>
+
+    <div class="max-w-xl w-full mx-auto space-y-6">
+        
+        <!-- Encabezado -->
+        <header class="text-center space-y-2">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-paper-200 text-paper-800 text-xs font-semibold tracking-wide uppercase">
+                <span>📖</span> Edición Artesanal Personalizada
+            </div>
+            <h1 class="font-serif text-3xl sm:text-4xl font-bold text-paper-900 tracking-tight">
+                Calculá tu Presupuesto
+            </h1>
+            <p class="text-paper-800 text-sm sm:text-base max-w-md mx-auto">
+                Seleccioná la cantidad de páginas de tu libro y conocé el valor estimado al instante.
+            </p>
+        </header>
+
+        <!-- Tarjeta Principal de Interacción -->
+        <main class="bg-paper-50 rounded-3xl p-6 sm:p-8 shadow-xl border border-paper-200 space-y-6">
+            
+            <!-- Control: Cantidad de Páginas -->
+            <div class="space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <label for="pagesInput" class="font-semibold text-paper-900 text-base">
+                        ¿Cuántas páginas tendrá tu libro?
+                    </label>
+                    <div class="flex items-center gap-2">
+                        <input type="number" id="pagesInput" min="40" max="800" step="4" value="100"
+                            class="w-24 text-right font-bold text-xl bg-white border border-paper-300 rounded-xl px-3 py-2 text-paper-900 focus:outline-none focus:ring-2 focus:ring-terracotta-500">
+                        <span class="text-sm font-medium text-paper-800">págs.</span>
+                    </div>
+                </div>
+
+                <input type="range" id="pagesSlider" min="40" max="800" step="4" value="100" class="w-full">
+
+                <!-- Atajos rápidos -->
+                <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+                    <span class="text-xs text-paper-800 font-medium">Tamaños habituales:</span>
+                    <div class="flex flex-wrap gap-1.5">
+                        <button type="button" data-pages="100" class="quick-page-btn px-3 py-1.5 text-xs font-semibold rounded-lg border border-terracotta-500 bg-terracotta-500 text-white transition">100 págs</button>
+                        <button type="button" data-pages="200" class="quick-page-btn px-3 py-1.5 text-xs font-semibold rounded-lg border border-paper-300 bg-paper-100 hover:bg-paper-200 text-paper-900 transition">200 págs</button>
+                        <button type="button" data-pages="300" class="quick-page-btn px-3 py-1.5 text-xs font-semibold rounded-lg border border-paper-300 bg-paper-100 hover:bg-paper-200 text-paper-900 transition">300 págs</button>
+                        <button type="button" data-pages="600" class="quick-page-btn px-3 py-1.5 text-xs font-semibold rounded-lg border border-paper-300 bg-paper-100 hover:bg-paper-200 text-paper-900 transition">600 págs</button>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-paper-200">
+
+            <!-- Tarjeta de Resultado Limpia (Sin tiempo de elaboración) -->
+            <div class="bg-paper-900 text-paper-50 rounded-2xl p-6 sm:p-7 shadow-inner border border-paper-800 text-center">
+                <span class="text-xs font-bold uppercase tracking-wider text-paper-300 block mb-1.5">Precio Estimado</span>
+                <div id="unitPriceDisplay" class="font-serif text-4xl sm:text-5xl font-bold tracking-tight text-white">
+                    $14.000
+                </div>
+            </div>
+
+            <!-- Botón WhatsApp -->
+            <button type="button" id="copyWhatsappBtn"
+                class="w-full py-4 px-6 rounded-2xl bg-forest-600 hover:bg-forest-700 active:scale-[0.99] text-white font-semibold text-base shadow-lg shadow-black/10 transition flex items-center justify-center gap-2.5">
+                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.978-1.418A9.955 9.955 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
+                </svg>
+                Pedir Presupuesto por WhatsApp
+            </button>
+
+            <!-- Vista previa interna del mensaje -->
+            <div class="pt-1">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-paper-800 block mb-1.5">Mensaje listo para enviar:</span>
+                <div id="whatsappPreview" class="text-xs text-paper-800 bg-paper-100 p-3.5 rounded-2xl border border-paper-200 whitespace-pre-line leading-relaxed font-sans">
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Parámetros internos ocultos al cliente:
+        // - 100 págs = $14.000
+        // - 300 págs = $23.000
+        // - A partir de 300 págs, la variable 'highVolumeScale' (0.471) reduce el costo marginal
+        //   para que 600 págs cueste exactamente $29.000.
+        const INTERNAL_CONFIG = {
+            hourly: 8000,
+            resma: 9000,
+            tapa: 1200,
+            ink: 1.5,
+            margin: 40,
+            roundTo: 500,
+            volumeThreshold: 300,   // Punto de quiebre (300 páginas)
+            highVolumeScale: 0.75  // Factor de reducción para páginas excedentes (> 300)
+        };
+
+        const els = {
+            pagesInput: document.getElementById('pagesInput'),
+            pagesSlider: document.getElementById('pagesSlider'),
+            quickPageBtns: document.querySelectorAll('.quick-page-btn'),
+            unitPriceDisplay: document.getElementById('unitPriceDisplay'),
+            whatsappPreview: document.getElementById('whatsappPreview'),
+            copyWhatsappBtn: document.getElementById('copyWhatsappBtn'),
+            toast: document.getElementById('toast')
+        };
+
+        function formatARS(value) {
+            return '$' + Math.round(value).toLocaleString('es-AR');
+        }
+
+        // Calcula el costo de producción (materiales + mano de obra) aplicando la reducción > 300 págs
+        function calcularCostoProduccion(pages) {
+            const paperPerPage = (INTERNAL_CONFIG.resma / 500) / 4;
+            const variablePageCost = paperPerPage + INTERNAL_CONFIG.ink; // $6 por página normal
+            const hourlyIncrementPer100 = (20 / 60) * INTERNAL_CONFIG.hourly; // $2.666,67 por cada 100 págs extra
+
+            // Base fija inicial (hasta 100 págs: 1h de trabajo + tapas + 100 págs de papel/tinta)
+            const effectivePages = Math.max(100, pages);
+            const base100Cost = INTERNAL_CONFIG.tapa + INTERNAL_CONFIG.hourly + (100 * variablePageCost);
+
+            if (effectivePages <= INTERNAL_CONFIG.volumeThreshold) {
+                // Tramo normal (100 a 300 páginas)
+                const extraPages = effectivePages - 100;
+                const extraMaterial = extraPages * variablePageCost;
+                const extraLabor = (extraPages / 100) * hourlyIncrementPer100;
+                return base100Cost + extraMaterial + extraLabor;
+            } else {
+                // Tramo 1: Primeras 300 páginas a tarifa completa
+                const pagesTramo1 = INTERNAL_CONFIG.volumeThreshold - 100; // 200 págs
+                const costTramo1 = (pagesTramo1 * variablePageCost) + ((pagesTramo1 / 100) * hourlyIncrementPer100);
+
+                // Tramo 2: Páginas por encima de 300 con reducción de costo por volumen
+                const extraVolumePages = effectivePages - INTERNAL_CONFIG.volumeThreshold;
+                const costTramo2 = ((extraVolumePages * variablePageCost) + ((extraVolumePages / 100) * hourlyIncrementPer100)) * INTERNAL_CONFIG.highVolumeScale;
+
+                return base100Cost + costTramo1 + costTramo2;
+            }
+        }
+
+        function calculateClient() {
+            const pages = Math.max(40, parseInt(els.pagesInput.value) || 100);
+            
+            const baseCost = calcularCostoProduccion(pages);
+            const rawPrice = baseCost * (1 + INTERNAL_CONFIG.margin / 100);
+            const finalPrice = Math.round(rawPrice / INTERNAL_CONFIG.roundTo) * INTERNAL_CONFIG.roundTo;
+
+            // Actualizar precio en pantalla
+            els.unitPriceDisplay.textContent = formatARS(finalPrice);
+
+            // Actualizar botones rápidos
+            els.quickPageBtns.forEach(btn => {
+                const btnPages = parseInt(btn.dataset.pages);
+                if (btnPages === pages) {
+                    btn.className = 'quick-page-btn px-3 py-1.5 text-xs font-semibold rounded-lg border border-terracotta-500 bg-terracotta-500 text-white transition';
+                } else {
+                    btn.className = 'quick-page-btn px-3 py-1.5 text-xs font-semibold rounded-lg border border-paper-300 bg-paper-100 hover:bg-paper-200 text-paper-900 transition';
+                }
+            });
+
+            // Mensaje de WhatsApp
+            const message = `¡Hola! 👋 Estuve viendo la calculadora en su web. Me interesa encargar un libro artesanal cosido a mano de *${pages} páginas*. El presupuesto estimado es de *${formatARS(finalPrice)}*. ¿Cómo podemos avanzar con el encargo?`;
+            els.whatsappPreview.textContent = message;
+        }
+
+        // Sincronizar inputs y sliders
+        els.pagesSlider.addEventListener('input', (e) => {
+            els.pagesInput.value = e.target.value;
+            calculateClient();
+        });
+        els.pagesInput.addEventListener('input', (e) => {
+            const val = Math.min(800, Math.max(40, parseInt(e.target.value) || 40));
+            els.pagesSlider.value = val;
+            calculateClient();
+        });
+
+        els.quickPageBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const p = btn.dataset.pages;
+                els.pagesInput.value = p;
+                els.pagesSlider.value = p;
+                calculateClient();
+            });
+        });
+
+        // Copiar al portapapeles
+        els.copyWhatsappBtn.addEventListener('click', () => {
+            const textToCopy = els.whatsappPreview.textContent;
+            const textArea = document.createElement('textarea');
+            textArea.value = textToCopy;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-9999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast();
+            } catch (err) {
+                console.error('Error al copiar:', err);
+            }
+            document.body.removeChild(textArea);
+        });
+
+        function showToast() {
+            els.toast.classList.remove('translate-y-20', 'opacity-0');
+            els.toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                els.toast.classList.add('translate-y-20', 'opacity-0');
+                els.toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 3000);
+        }
+
+        window.addEventListener('DOMContentLoaded', calculateClient);
+    </script>
+</body>
+</html>
